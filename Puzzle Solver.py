@@ -3,6 +3,8 @@ from queue import PriorityQueue
 import tkinter as tk
 from copy import deepcopy
 
+# ===================== SUDOKU UTILITIES =====================
+
 def find_empty(grid):
     for i in range(len(grid)):
         for j in range(len(grid[0])):
@@ -12,8 +14,10 @@ def find_empty(grid):
 
 def is_valid(grid, r, c, val):
     n_rows, n_cols = len(grid), len(grid[0])
+    # Row & Column check
     if any(grid[r][x] == val for x in range(n_cols)): return False
     if any(grid[x][c] == val for x in range(n_rows)): return False
+    # Box check (2x3 for 6x6)
     box_r, box_c = r - r % 2, c - c % 3
     for i in range(2):
         for j in range(3):
@@ -61,6 +65,7 @@ def sudoku_bnb(grid, steps):
             steps.append([r, c, 0])
     return False
 
+# ===================== 15-PUZZLE UTILITIES =====================
 
 goal_state = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,0]]
 MAX_DEPTH_15PUZZLE = 10
@@ -122,6 +127,7 @@ def bnb_solve_15puzzle(start):
                     pq.put((h+g+1, g+1, new_state, path+[state]))
     return None
 
+# ===================== GUI APPLICATION =====================
 
 class PuzzleSolverApp:
     def __init__(self, master):
@@ -137,6 +143,7 @@ class PuzzleSolverApp:
         self.current_puzzle_frame=None
         self.visualize_delay_ms=tk.IntVar(value=50)
 
+    # ----------------- SUDOKU UI -----------------
 
     def clear_current_frame(self):
         if self.current_puzzle_frame:
@@ -229,6 +236,7 @@ class PuzzleSolverApp:
             self.master.after(self.visualize_delay_ms.get(),lambda: animate(idx+1))
         animate(0)
 
+    # ----------------- 15-PUZZLE UI -----------------
 
     def show_15puzzle_ui(self):
         self.clear_current_frame()
@@ -302,8 +310,9 @@ class PuzzleSolverApp:
             self.master.after(200,lambda:animate(idx+1))
         animate(0)
 
+# ===================== MAIN =====================
+
 if __name__=="__main__":
     root=tk.Tk()
     app=PuzzleSolverApp(root)
     root.mainloop()
-
